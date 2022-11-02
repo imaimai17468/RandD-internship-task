@@ -33,12 +33,14 @@
 |api-build|aspidaを使って型定義ファイルをビルド|`aspida`|
 |mc|コンポーネントを作る<br>make component|`hygen components add`|
 
-## commit messages
+## Commit Message Rule
 [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/) の規則に沿って commit message を記述してください。
 
+`{prefix}: {message} (#{issue_number})`
+
 ```
-chore: commit-lintを導入した
-feat: ログイン機能を作成した
+chore: commit-lintを導入した (#15)
+feat: ログイン機能を作成した (#21)
 ```
 
 |prefix|内容|
@@ -55,8 +57,41 @@ feat: ログイン機能を作成した
 |style|コードスタイルやフォーマット|
 |test|テスト|
 
-## ディレクトリ説明
+## Branch Rule
+下記のルールに従ってブランチを作成してください
 
+`{prefix}/{name}/{issue_number}`
+
+```
+feat/imai/15
+fix/foo/34
+```
+
+|prefix|内容|
+|:-:|-|
+|feat|新機能の追加|
+|fix|修正|
+|review|レビュー|
+
+## Issue Rule
+下記のルールに従ってブランチを作成してください<br>
+また、内容に従って適宜Tag及びAsigneesをつけてください<br>
+
+`[{prefix}]{content}`
+
+```
+[front]CSS Moduleの導入
+[Back]DBテーブル設計
+```
+
+|prefix|内容|
+|:-:|-|
+|env|全体的な環境構築|
+|front|フロントエンド面でのissue|
+|back|バックエンド面|
+|infra|インフラ面|
+
+## ディレクトリ説明
 ### view/
 フロントエンド開発用ディレクトリ<br>
 いずれバックエンドのコンテナを作ることを前提として作成
