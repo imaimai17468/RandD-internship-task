@@ -106,8 +106,8 @@ fix/foo/34
 - layout - ヘッダーなどの大きな要素
 - store - 状態管理
 
-## apis/
+### apis/
 aspida で使用する型情報を配置
 
-## types/
+### types/
 汎用的な型定義ファイルを配置
