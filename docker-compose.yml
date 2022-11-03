@@ -2,7 +2,7 @@ version: '3'
 services:
   view:
     build: ./view
-    container_name: 'view'
+    container_name: 'rd_view'
     ports:
       - "3000:3000"
     command: sh -c "npm install && npm run dev"
