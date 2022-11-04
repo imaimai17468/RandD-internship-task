@@ -3,7 +3,11 @@ import React from 'react'
 interface Props {
   className?: string
   placeholder?: string
+  required?: boolean
+  minLength?: number
+  disabled?: boolean
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onSubmit?: (e: React.FormEvent<HTMLInputElement>) => void
 }
 
 export default function Input(props: Props): JSX.Element {
@@ -11,9 +15,14 @@ export default function Input(props: Props): JSX.Element {
 
   return (
     <input
+      type='text'
       className={style}
       placeholder={props.placeholder}
+      required={props.required}
+      minLength={props.minLength}
       onChange={props.onChange}
+      onSubmit={props.onSubmit}
+      disabled={props.disabled}
     />
   )
 }
