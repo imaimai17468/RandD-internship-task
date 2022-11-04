@@ -1,33 +1,28 @@
 import React from 'react'
 
-type Props = {
+interface Props {
   outlined?: boolean
   size?: 'small' | 'middle'
   children: React.ReactNode
   onClick?: () => void
 }
 
-export const Button: React.FC<Props> = ({
-  outlined = false,
-  size = 'middle',
-  children,
-  onClick,
-}) => {
+export default function Button(props: Props): JSX.Element {
   return (
     <button
       type="button"
       className={`
         rounded
-        ${size === 'middle' ? 'px-5 py-1' : 'px-3 py-1 text-sm'}
+        ${props.size === 'middle' ? 'px-5 py-1' : 'px-3 py-1 text-sm'}
         ${
-          outlined
-            ? 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
-            : 'border-none bg-blue-600 text-white hover:bg-blue-500'
+          props.outlined
+            ? 'border border-accent-1 text-accent-1 hover:bg-accent-1 hover:text-text-main-white'
+            : 'border-none bg-accent-1 text-text-main-white hover:bg-accent-2'
         }
       `}
-      onClick={onClick}
+      onClick={props.onClick}
     >
-      {children}
+      {props.children}
     </button>
   )
 }
