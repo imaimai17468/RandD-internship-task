@@ -1,41 +1,38 @@
 module.exports = {
-    "settings": {
-        "react": {
-            "version": "detect",
-        },
+  settings: {
+    react: {
+      version: 'detect',
     },
-    "env": {
-        "browser": true,
-        "es2021": true
+  },
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'next/core-web-vitals',
+    'prettier',
+  ],
+  overrides: [
+    {
+      files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
+      env: {
+        jest: true,
+      },
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "next/core-web-vitals",
-        "prettier",
-    ],
-    "overrides": [
-        {
-            "files": [
-                "**/*.js",
-                "**/*.jsx",
-                "**/*.ts",
-                "**/*.tsx"
-            ],
-            "env": {
-                "jest": true
-            }
-        }
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react",
-        "@typescript-eslint"
-    ],
-    "rules": {
-    }
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  },
+  plugins: ['react', '@typescript-eslint'],
+  rules: {
+    'no-unused-vars': 'off',
+  },
+  globals: {
+    JSX: 'readonly',
+    React: 'readonly',
+  },
 }
