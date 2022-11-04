@@ -12,7 +12,7 @@ export default function Home() {
     if (!name) {
       setIsShowCaution(true)
       return
-    }else{
+    } else {
       Router.push('/chatroom')
     }
   }
@@ -20,7 +20,7 @@ export default function Home() {
   const nameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value)
   }
-  
+
   return (
     <div>
       <Head>
@@ -37,14 +37,26 @@ export default function Home() {
           <p className="text-2xl">名前を入力して始める</p>
           <div className="flex flex-row gap-5">
             <form onSubmit={(e) => e.preventDefault()}>
-              <Input placeholder="name" required={true} minLength={1} className='mr-5' onChange={nameChangeHandler} />
-              <Button outlined={true} size={'middle'} onClick={buttonClickHandler}>
+              <Input
+                placeholder="name"
+                required={true}
+                minLength={1}
+                className="mr-5"
+                onChange={nameChangeHandler}
+              />
+              <Button
+                outlined={true}
+                size={'middle'}
+                onClick={buttonClickHandler}
+              >
                 Submit
               </Button>
             </form>
           </div>
           <div>
-            {isShowCaution && <p className="text-accent-2">名前を入力してください</p>}
+            {isShowCaution && (
+              <p className="text-accent-2">名前を入力してください</p>
+            )}
           </div>
         </div>
       </main>
