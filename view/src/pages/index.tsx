@@ -39,7 +39,7 @@ export default function Home() {
           <p className="text-md lg:text-2xl">名前を入力して始める</p>
           <div className="flex flex-row gap-5">
             <form onSubmit={(e) => e.preventDefault()}>
-              <div className='flex flex-row flex-wrap gap-5 justify-center '>
+              <div className="flex flex-row flex-wrap justify-center gap-5 ">
                 <Input
                   placeholder="name"
                   required={true}
