@@ -8,8 +8,8 @@ export default function Home() {
       <div>
         <Header />
       </div>
-      <main className="align-center mx-auto flex h-90v w-4/5 flex-col items-center justify-center">
-        <div className="flex h-80v w-4/5 flex-col items-center rounded-xl bg-primary-2">
+      <main className="align-center mx-auto flex h-90v w-full flex-col items-center justify-center">
+        <div className="flex h-80v w-full flex-col items-center rounded-xl bg-primary-2 lg:w-4/5">
           <div className="mt-7 h-3/5 w-9/10 rounded-3xl border-4 border-double border-primary-1 bg-background-1 "></div>
           <div className="h-1/5 w-9/10">
             <div className="inline-flex w-full items-center justify-center">
