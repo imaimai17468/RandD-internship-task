@@ -1,7 +1,9 @@
 interface Props {
   className?: string
   placeholder?: string
+  value?: string
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
 }
 
 export default function Textarea(props: Props): JSX.Element {
@@ -12,7 +14,9 @@ export default function Textarea(props: Props): JSX.Element {
     <textarea
       className={style}
       placeholder={props.placeholder}
+      value={props.value}
       onChange={props.onChange}
+      onKeyDown={props.onKeyDown}
     />
   )
 }
