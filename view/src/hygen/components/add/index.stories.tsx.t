@@ -4,7 +4,7 @@ unless_exists: true
 ---
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { <%= name %> } from "./<%= name %>";
+import <%= name %> from "./<%= name %>";
 
 export default {
   title: "<%= name %>",

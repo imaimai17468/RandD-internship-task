@@ -3,16 +3,31 @@ import Head from 'next/head'
 import { Button, Input } from '@components/common'
 import { Header } from '@components/layout'
 import Router from 'next/router'
+import { useRecoilState } from 'recoil'
+import { userState } from '@components/store/Auth/auth'
+import { useEffect } from 'react'
 
 export default function Home() {
   const [name, setName] = React.useState('')
   const [isShowCaution, setIsShowCaution] = React.useState(false)
+  const [user, setUser] = useRecoilState(userState)
+
+  const initValue = {
+    id: -1,
+    name: '',
+    email: '',
+  }
+
+  useEffect(() => {
+    setUser(initValue)
+  }, [])
 
   const buttonClickHandler = () => {
     if (!name) {
       setIsShowCaution(true)
       return
     } else {
+      setUser({ ...user, name: name })
       Router.push('/chatroom')
     }
   }

@@ -6,7 +6,7 @@ interface Props {
   purpose?: string;
 }
 
-export const <%= name %>: React.FC<Props> = () => {
+export default function <%= name %>(props: Props): JSX.Element {
   return (
     <>
     </>
