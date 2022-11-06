@@ -15,11 +15,10 @@ export default function Home() {
   const [chats, setChats] = React.useState<ChatProp[]>([])
   const [message, setMessage] = React.useState<string>('')
   const user = useRecoilValue(userState)
-  // 画面サイズでplaceholderを変更する
   const placeholderMessage =
-    window.innerWidth > 768
+    typeof window !== 'undefined' && window.innerWidth > 768
       ? 'メッセージを入力 (Ctrl + Enter or ⌘ + Enter で送信)'
-      : 'メッセージを入力'
+      : 'メッセージを入力してください'
 
   const scrollBottomRef = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {
