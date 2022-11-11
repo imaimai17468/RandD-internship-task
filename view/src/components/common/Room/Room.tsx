@@ -38,6 +38,15 @@ export default function Room(props: Props): JSX.Element {
     snapshot.forEach((doc) => {
       doc.ref.delete()
     })
+
+    // 同じroom_idのメッセージを削除する
+    const messageRef = db
+      .collection('chats')
+      .where('room_id', '==', props.room_id)
+    const messageSnapshot = await messageRef.get()
+    messageSnapshot.forEach((doc) => {
+      doc.ref.delete()
+    })
   }
 
   return (

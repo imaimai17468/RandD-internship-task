@@ -128,7 +128,7 @@ const Index: NextPage = () => {
             </div>
             <div className="mb-2 flex flex-row items-center justify-between">
               <p className="font-bold text-background-1">{user.name}</p>
-              <Button onClick={buttonClickHandler}>送信</Button>
+              <Button size='small' onClick={buttonClickHandler}>送信</Button>
             </div>
             <Textarea
               className="h-3/5 w-full rounded-xl bg-background-1 text-primary-1"
