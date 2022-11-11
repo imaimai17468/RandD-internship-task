@@ -26,7 +26,7 @@ export default function Header(): JSX.Element {
     <div className="h-16 w-full bg-primary-1">
       <div className="align-center mx-5 my-auto flex h-full flex-row items-center gap-10 p-0">
         <Link href="/">
-          <p className=" text-xl text-text-main-white lg:text-3xl">
+          <p className=" text-md text-text-main-white lg:text-3xl">
             imaimai chat
           </p>
         </Link>
@@ -40,7 +40,7 @@ export default function Header(): JSX.Element {
           ) : (
             <div className="flex flex-row items-center gap-3">
               <Button onClick={handleSignOut}>ログアウト</Button>
-              <p>{user.name}</p>
+              <p className="text-sm md:text-xl">{user.name}</p>
             </div>
           )}
         </div>

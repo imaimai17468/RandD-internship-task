@@ -142,6 +142,7 @@ export default function Home() {
         <Input
           onChange={(e) => setPassword(e.target.value)}
           placeholder="パスワード"
+          type="password"
         />
         {!nowSubmit ? (
           <Button onClick={onLogin}>ログイン</Button>
