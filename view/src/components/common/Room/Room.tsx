@@ -12,6 +12,8 @@ interface Props {
   description: string
   created_at: string
   className?: string
+  isLogin: boolean
+  setIsShowLoginModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function Room(props: Props): JSX.Element {
@@ -19,6 +21,11 @@ export default function Room(props: Props): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const buttonClickHandler = () => {
+    if (!props.isLogin) {
+      props.setIsShowLoginModal(true)
+      return
+    }
+
     // roomStateを更新する
     // titleとidを更新する
     setRoom({
@@ -29,6 +36,10 @@ export default function Room(props: Props): JSX.Element {
   }
 
   const handleOpenDeleteModal = () => {
+    if (!props.isLogin) {
+      props.setIsShowLoginModal(true)
+      return
+    }
     setIsOpen(true)
   }
 
@@ -76,14 +87,12 @@ export default function Room(props: Props): JSX.Element {
       </div>
       <div className="p-5">
         <div className="flex flex-col items-center justify-center">
-          <div className="flex w-full flex-row items-center justify-between gap-5">
+          <div className="mb-3 ml-auto flex flex-row gap-3">
+            <Button onClick={handleOpenDeleteModal}>ルームを削除</Button>
+            <Button onClick={buttonClickHandler}>入室</Button>
+          </div>
+          <div className="flex w-full flex-row items-center gap-5">
             <p className="text-3xl text-background-1">{props.title}</p>
-            <div className="flex flex-row gap-3">
-              <Button onClick={handleOpenDeleteModal} outlined={true}>
-                ルームを削除
-              </Button>
-              <Button onClick={buttonClickHandler}>Enter</Button>
-            </div>
           </div>
           <div className="inline-flex w-full items-center justify-center">
             <hr className="my-5 h-1 w-full rounded border-0 bg-background-1 dark:bg-gray-700" />
@@ -92,7 +101,9 @@ export default function Room(props: Props): JSX.Element {
             </div>
           </div>
           <p className="mr-auto text-background-1">{props.description}</p>
-          <p className="ml-auto text-background-1">{props.created_at}</p>
+          <p className="ml-auto text-background-1">
+            作成日時：{props.created_at}
+          </p>
         </div>
       </div>
     </div>

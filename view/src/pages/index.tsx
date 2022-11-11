@@ -1,16 +1,13 @@
 import React from 'react'
 import Head from 'next/head'
-import { Button, Input } from '@components/common'
+import { Button } from '@components/common'
 import { Header } from '@components/layout'
 import Router from 'next/router'
-import { useRecoilState } from 'recoil'
-import { userState } from '@components/store/Auth/auth'
-import { useEffect } from 'react'
+import { useAuthContext } from '@hooks/AuthContext'
 
 export default function Home() {
-  const [name, setName] = React.useState('')
-  const [isShowCaution, setIsShowCaution] = React.useState(false)
-  const [user, setUser] = useRecoilState(userState)
+  const { user } = useAuthContext()
+  const isLogin = !!user
 
   const initValue = {
     id: -1,
@@ -18,22 +15,12 @@ export default function Home() {
     email: '',
   }
 
-  useEffect(() => {
-    setUser(initValue)
-  }, [])
+  // useEffect(() => {
+  //   setUser(initValue)
+  // }, [])
 
   const buttonClickHandler = () => {
-    if (!name) {
-      setIsShowCaution(true)
-      return
-    } else {
-      setUser({ ...user, name: name })
-      Router.push('/rooms')
-    }
-  }
-
-  const nameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
+    Router.push('/auth')
   }
 
   return (
@@ -51,31 +38,14 @@ export default function Home() {
           ようこそ、いまいまいチャットへ
         </h1>
         <div className="my-2 flex flex-col items-center justify-center gap-5 lg:my-5">
-          <p className="text-md lg:text-2xl">名前を入力して始める</p>
-          <div className="flex flex-row gap-5">
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className="flex flex-row flex-wrap justify-center gap-5 ">
-                <Input
-                  placeholder="name"
-                  required={true}
-                  minLength={1}
-                  onChange={nameChangeHandler}
-                />
-                <Button
-                  outlined={true}
-                  size={'middle'}
-                  onClick={buttonClickHandler}
-                >
-                  Submit
-                </Button>
-              </div>
-            </form>
-          </div>
-          <div>
-            {isShowCaution && (
-              <p className="text-accent-2">名前を入力してください</p>
-            )}
-          </div>
+          <p className="text-md lg:text-2xl">さぁ、はじめましょう！</p>
+          {isLogin ? (
+            <Button onClick={() => Router.push('/rooms')}>
+              チャットルームへ
+            </Button>
+          ) : (
+            <Button onClick={buttonClickHandler}>ログイン / 新規登録</Button>
+          )}
         </div>
       </main>
     </div>
