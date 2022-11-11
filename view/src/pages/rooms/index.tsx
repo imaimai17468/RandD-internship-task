@@ -141,8 +141,8 @@ const Index: NextPage = () => {
         <Header />
       </div>
       <main>
-        <div className="mx-auto flex w-4/5 flex-row items-center justify-between">
-          <p className="mt-8 text-4xl">ルーム一覧</p>
+        <div className="mx-auto flex w-4/5 flex-row items-center justify-between mt-8">
+          <p className="text-4xl">ルーム一覧</p>
           <Button outlined={true} onClick={handleOpen}>
             ルーム作成
           </Button>
