@@ -10,3 +10,5 @@ services:
       - ./view:/app
     stdin_open: true
     tty: true
+    env_file:
+      - .env
