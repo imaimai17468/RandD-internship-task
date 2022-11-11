@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Textarea, Chat, Button } from '@components/common'
+import { Textarea, Chat, Button, Modal } from '@components/common'
 import { Header } from '@components/layout'
 import { useRecoilValue } from 'recoil'
 import { userState } from '@components/store/Auth/auth'
@@ -9,6 +9,7 @@ import axios from 'axios'
 import { NextPage } from 'next'
 import { db } from '../../firebase'
 import Router from 'next/router'
+import { useAuthContext } from '@hooks/AuthContext'
 
 interface ChatProp {
   message: string
@@ -19,15 +20,21 @@ interface ChatProp {
 const Index: NextPage = () => {
   const [chats, setChats] = React.useState<ChatProp[]>([])
   const [message, setMessage] = React.useState<string>('')
-  const user = useRecoilValue(userState)
+  const userDetail = useRecoilValue(userState)
   const room = useRecoilValue(roomState)
-
+  const { user } = useAuthContext()
+  const isLogin = !!user
+  const [isShowLoginModal, setIsShowLoginModal] = React.useState<boolean>(false)
   const placeholderMessage =
     typeof window !== 'undefined' && window.innerWidth > 768
       ? 'メッセージを入力 (Ctrl + Enter or ⌘ + Enter で送信)'
       : 'メッセージを入力してください'
 
   useEffect(() => {
+    if (!isLogin) {
+      Router.push('/auth')
+    }
+
     const unSub = db
       .collection('chats')
       .orderBy('time', 'asc')
@@ -45,7 +52,7 @@ const Index: NextPage = () => {
     // '../api/chat' に チャット内容を POST する
     await axios.post('../api/chat', {
       message: message,
-      name: user.name,
+      name: userDetail.name,
       time: new Date().toLocaleString(),
       room_id: room.room_id,
     })
@@ -61,7 +68,7 @@ const Index: NextPage = () => {
       const newChat = {
         message: message,
         time: new Date().toLocaleString(),
-        name: user.name,
+        name: userDetail.name,
       }
       setChats([...chats, newChat])
       setMessage('')
@@ -73,7 +80,7 @@ const Index: NextPage = () => {
     const newChat = {
       message: message,
       time: new Date().toLocaleString(),
-      name: user.name,
+      name: userDetail.name,
     }
     setChats([...chats, newChat])
     setMessage('')
@@ -84,6 +91,25 @@ const Index: NextPage = () => {
     console.log('leave')
     Router.push('/rooms')
   }
+
+  const backToAuthPage = (
+    <Modal noCloseButton={true}>
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-center text-2xl font-bold">
+          ログインまたは新規登録をしてください
+        </p>
+        <div className="my-4 flex justify-center">
+          <Button
+            onClick={() => {
+              Router.push('/auth')
+            }}
+          >
+            ログインまたは新規登録
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  )
 
   return (
     <div>
@@ -105,7 +131,8 @@ const Index: NextPage = () => {
           <div className="h-1/2 w-9/10 overflow-y-scroll rounded-3xl border-4 border-double border-primary-1 bg-background-1">
             <div className="h-95/100 mx-auto my-3 flex w-95/100 flex-col">
               {chats.map((chat) => {
-                const position = chat.name === user.name ? 'right' : 'left'
+                const position =
+                  chat.name === userDetail.name ? 'right' : 'left'
                 return (
                   <Chat
                     key={chat.time}
@@ -127,7 +154,7 @@ const Index: NextPage = () => {
               </div>
             </div>
             <div className="mb-2 flex flex-row items-center justify-between">
-              <p className="font-bold text-background-1">{user.name}</p>
+              <p className="font-bold text-background-1">{userDetail.name}</p>
               <Button size="small" onClick={buttonClickHandler}>
                 送信
               </Button>

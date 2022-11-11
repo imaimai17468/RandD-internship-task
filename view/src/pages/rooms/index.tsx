@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { Room, Button, Modal } from '@components/common'
 import { Header } from '@components/layout'
-import axios from 'axios'
 import { NextPage } from 'next'
 import { db } from '../../firebase'
 import { roomState } from '@components/store/Room/room'
 import { useRecoilValue, useRecoilState } from 'recoil'
+import { useAuthContext } from '@hooks/AuthContext'
+import Router from 'next/router'
 
 interface RoomProp {
   title: string
@@ -22,6 +23,9 @@ const Index: NextPage = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] =
     React.useState<boolean>(false)
   const [isShowCaution, setIsShowCaution] = React.useState<boolean>(false)
+  const { user } = useAuthContext()
+  const isLogin = !!user
+  const [isShowLoginModal, setIsShowLoginModal] = React.useState<boolean>(false)
 
   useEffect(() => {
     setRoom({ room_id: '', title: '', description: '' })
@@ -47,6 +51,10 @@ const Index: NextPage = () => {
   }, [])
 
   const handleOpen = () => {
+    if (!isLogin) {
+      setIsShowLoginModal(true)
+      return
+    }
     setIsOpen(true)
   }
 
@@ -70,47 +78,65 @@ const Index: NextPage = () => {
     }
   }
 
+  const backToAuthPage = (
+    <Modal noCloseButton={true}>
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-center text-2xl font-bold">
+          ログインまたは新規登録をしてください
+        </p>
+        <div className="my-4 flex justify-center">
+          <Button
+            onClick={() => {
+              Router.push('/auth')
+            }}
+          >
+            ログインまたは新規登録
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  )
+
+  const createRoomModal = (
+    <Modal setisOpen={setIsOpen} setShowCaution={setIsShowCaution}>
+      <div className="my-5 flex flex-col items-center justify-center gap-5">
+        <div className="w-4/5">
+          <input
+            type="text"
+            placeholder="タイトル"
+            className="focus:border-transparent w-full rounded-lg border-2 border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="w-4/5">
+          <textarea
+            placeholder="説明"
+            className="focus:border-transparent w-full rounded-lg border-2 border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div className="ml-auto">
+          <Button
+            onClick={async () => {
+              await handleCreateRoom()
+            }}
+          >
+            作成
+          </Button>
+        </div>
+        <div>
+          {isShowCaution && (
+            <p className="text-red-500">タイトルと説明を入力してください</p>
+          )}
+        </div>
+      </div>
+    </Modal>
+  )
+
   return (
     <div>
-      <div>
-        {isOpen && (
-          <Modal setisOpen={setIsOpen} setShowCaution={setIsShowCaution}>
-            <div className="my-5 flex flex-col items-center justify-center gap-5">
-              <div className="w-4/5">
-                <input
-                  type="text"
-                  placeholder="タイトル"
-                  className="focus:border-transparent w-full rounded-lg border-2 border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-              <div className="w-4/5">
-                <textarea
-                  placeholder="説明"
-                  className="focus:border-transparent w-full rounded-lg border-2 border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-              <div className="ml-auto">
-                <Button
-                  onClick={async () => {
-                    await handleCreateRoom()
-                  }}
-                >
-                  作成
-                </Button>
-              </div>
-              <div>
-                {isShowCaution && (
-                  <p className="text-red-500">
-                    タイトルと説明を入力してください
-                  </p>
-                )}
-              </div>
-            </div>
-          </Modal>
-        )}
-      </div>
+      {!isLogin && isShowLoginModal && backToAuthPage}
+      <div>{isOpen && createRoomModal}</div>
       <div>
         <Header />
       </div>
@@ -129,6 +155,8 @@ const Index: NextPage = () => {
               description={room.description}
               created_at={room.created_at}
               room_id={index}
+              isLogin={isLogin}
+              setIsShowLoginModal={setIsShowLoginModal}
             />
           ))}
         </div>
