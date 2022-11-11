@@ -12,6 +12,8 @@ interface Props {
   description: string
   created_at: string
   className?: string
+  isLogin: boolean
+  setIsShowLoginModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function Room(props: Props): JSX.Element {
@@ -19,6 +21,11 @@ export default function Room(props: Props): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const buttonClickHandler = () => {
+    if (!props.isLogin) {
+      props.setIsShowLoginModal(true)
+      return
+    }
+
     // roomStateを更新する
     // titleとidを更新する
     setRoom({
@@ -29,6 +36,10 @@ export default function Room(props: Props): JSX.Element {
   }
 
   const handleOpenDeleteModal = () => {
+    if (!props.isLogin) {
+      props.setIsShowLoginModal(true)
+      return
+    }
     setIsOpen(true)
   }
 
@@ -79,10 +90,8 @@ export default function Room(props: Props): JSX.Element {
           <div className="flex w-full flex-row items-center justify-between gap-5">
             <p className="text-3xl text-background-1">{props.title}</p>
             <div className="flex flex-row gap-3">
-              <Button onClick={handleOpenDeleteModal} outlined={true}>
-                ルームを削除
-              </Button>
-              <Button onClick={buttonClickHandler}>Enter</Button>
+              <Button onClick={handleOpenDeleteModal}>ルームを削除</Button>
+              <Button onClick={buttonClickHandler}>入室</Button>
             </div>
           </div>
           <div className="inline-flex w-full items-center justify-center">
