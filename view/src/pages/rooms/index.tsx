@@ -21,6 +21,7 @@ const Index: NextPage = () => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const [isOpenDeleteModal, setIsOpenDeleteModal] =
     React.useState<boolean>(false)
+  const [isShowCaution, setIsShowCaution] = React.useState<boolean>(false)
 
   useEffect(() => {
     setRoom({ room_id: '', title: '', description: '' })
@@ -50,25 +51,30 @@ const Index: NextPage = () => {
   }
 
   const handleCreateRoom = async () => {
-    const roomRef = db.collection('rooms').doc()
-    await roomRef.set({
-      title: title,
-      description: description,
-      created_at: new Date().toLocaleString(),
-    })
-    setRoom({
-      title: title,
-      description: description,
-      created_at: new Date().toLocaleDateString(),
-    })
-    setIsOpen(false)
+    if (title === '' || description === '') {
+      setIsShowCaution(true)
+    } else {
+      const roomRef = db.collection('rooms').doc()
+      await roomRef.set({
+        title: title,
+        description: description,
+        created_at: new Date().toLocaleString(),
+      })
+      setRoom({
+        title: title,
+        description: description,
+        created_at: new Date().toLocaleDateString(),
+      })
+      setIsOpen(false)
+      setIsShowCaution(false)
+    }
   }
 
   return (
     <div>
       <div>
         {isOpen && (
-          <Modal setisOpen={setIsOpen}>
+          <Modal setisOpen={setIsOpen} setShowCaution={setIsShowCaution}>
             <div className="my-5 flex flex-col items-center justify-center gap-5">
               <div className="w-4/5">
                 <input
@@ -93,6 +99,13 @@ const Index: NextPage = () => {
                 >
                   作成
                 </Button>
+              </div>
+              <div>
+                {isShowCaution && (
+                  <p className="text-red-500">
+                    タイトルと説明を入力してください
+                  </p>
+                )}
               </div>
             </div>
           </Modal>
