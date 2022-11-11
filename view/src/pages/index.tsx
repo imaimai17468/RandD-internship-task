@@ -28,7 +28,7 @@ export default function Home() {
       return
     } else {
       setUser({ ...user, name: name })
-      Router.push('/chatroom')
+      Router.push('/rooms')
     }
   }
 

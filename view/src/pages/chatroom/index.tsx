@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Textarea, Chat, Button } from '@components/common'
 import { Header } from '@components/layout'
 import { useRecoilValue } from 'recoil'
 import { userState } from '@components/store/Auth/auth'
+import { roomState } from '@components/store/Room/room'
 import { useRef, useLayoutEffect } from 'react'
+import axios from 'axios'
+import { NextPage } from 'next'
+import { db } from '../../firebase'
+import Router from 'next/router'
 
 interface ChatProp {
   message: string
@@ -11,14 +16,40 @@ interface ChatProp {
   name: string
 }
 
-export default function Home() {
+const Index: NextPage = () => {
   const [chats, setChats] = React.useState<ChatProp[]>([])
   const [message, setMessage] = React.useState<string>('')
   const user = useRecoilValue(userState)
+  const room = useRecoilValue(roomState)
+
   const placeholderMessage =
     typeof window !== 'undefined' && window.innerWidth > 768
       ? 'メッセージを入力 (Ctrl + Enter or ⌘ + Enter で送信)'
       : 'メッセージを入力してください'
+
+  useEffect(() => {
+    const unSub = db
+      .collection('chats')
+      .orderBy('time', 'asc')
+      .onSnapshot((snapshot) => {
+        // room_idがroom.room_idと一致していたらchatsに格納する
+        const chats = snapshot.docs
+          .map((doc) => doc.data())
+          .filter((chat) => chat.room_id == room.room_id) as ChatProp[]
+        setChats(chats)
+      })
+    return () => unSub()
+  }, [])
+
+  const insertChat = async () => {
+    // '../api/chat' に チャット内容を POST する
+    await axios.post('../api/chat', {
+      message: message,
+      name: user.name,
+      time: new Date().toLocaleString(),
+      room_id: room.room_id,
+    })
+  }
 
   const scrollBottomRef = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {
@@ -34,6 +65,7 @@ export default function Home() {
       }
       setChats([...chats, newChat])
       setMessage('')
+      insertChat()
     }
   }
 
@@ -45,6 +77,12 @@ export default function Home() {
     }
     setChats([...chats, newChat])
     setMessage('')
+    insertChat()
+  }
+
+  const leaveHandler = () => {
+    console.log('leave')
+    Router.push('/rooms')
   }
 
   return (
@@ -53,7 +91,17 @@ export default function Home() {
         <Header />
       </div>
       <main className="align-center mx-auto flex h-90v w-full flex-col items-center justify-center">
+        <div className="m-3">
+          <Button
+            onClick={() => {
+              leaveHandler()
+            }}
+          >
+            Leave
+          </Button>
+        </div>
         <div className="flex h-80v w-full flex-col items-center justify-center rounded-xl bg-primary-2 md:w-4/5">
+          <p className="mb-2 text-background-1">{room.title}</p>
           <div className="h-1/2 w-9/10 overflow-y-scroll rounded-3xl border-4 border-double border-primary-1 bg-background-1">
             <div className="h-95/100 mx-auto my-3 flex w-95/100 flex-col">
               {chats.map((chat) => {
@@ -95,3 +143,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Index
