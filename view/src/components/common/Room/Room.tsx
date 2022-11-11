@@ -47,7 +47,7 @@ export default function Room(props: Props): JSX.Element {
           <Modal setisOpen={setIsOpen}>
             <div className="text-center">
               <p className="text-2xl font-bold">本当に削除しますか？</p>
-              <div className="flex justify-center my-10 gap-5">
+              <div className="my-10 flex justify-center gap-5">
                 <Button
                   outlined={true}
                   onClick={() => {
@@ -62,18 +62,15 @@ export default function Room(props: Props): JSX.Element {
                 </Button>
               </div>
             </div>
-          </ Modal>
+          </Modal>
         )}
       </div>
       <div className="p-5">
         <div className="flex flex-col items-center justify-center">
           <div className="flex w-full flex-row items-center justify-between gap-5">
             <p className="text-3xl text-background-1">{props.title}</p>
-            <div className='flex flex-row gap-3'>
-              <Button
-                onClick={handleOpenDeleteModal}
-                outlined={true}
-              >
+            <div className="flex flex-row gap-3">
+              <Button onClick={handleOpenDeleteModal} outlined={true}>
                 ルームを削除
               </Button>
               <Button onClick={buttonClickHandler}>Enter</Button>
