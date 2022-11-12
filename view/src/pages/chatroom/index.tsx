@@ -7,7 +7,7 @@ import { roomState } from '@components/store/Room/room'
 import { useRef, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { NextPage } from 'next'
-import { db } from '../../firebase'
+import { db, app } from '../../firebase'
 import Router from 'next/router'
 import { useAuthContext } from '@hooks/AuthContext'
 
@@ -43,19 +43,28 @@ const Index: NextPage = () => {
         const chats = snapshot.docs
           .map((doc) => doc.data())
           .filter((chat) => chat.room_id == room.room_id) as ChatProp[]
+        // chatsのtimeはunixtimeなので、Date型に変換する
+        chats.forEach((chat) => {
+          chat.time = new Date(chat.time).toLocaleString()
+        })
+
         setChats(chats)
       })
     return () => unSub()
   }, [])
 
   const insertChat = async () => {
-    // '../api/chat' に チャット内容を POST する
-    await axios.post('../api/chat', {
+    if (message === '') {
+      return
+    }
+    
+    const chat = {
       message: message,
+      time: new Date().getTime(),
       name: userDetail.name,
-      time: new Date().toLocaleString(),
       room_id: room.room_id,
-    })
+    }
+    await db.collection('chats').add(chat)
   }
 
   const scrollBottomRef = useRef<HTMLDivElement>(null)
@@ -65,24 +74,12 @@ const Index: NextPage = () => {
 
   const keyDownHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && message && (e.ctrlKey || e.metaKey)) {
-      const newChat = {
-        message: message,
-        time: new Date().toLocaleString(),
-        name: userDetail.name,
-      }
-      setChats([...chats, newChat])
       setMessage('')
       insertChat()
     }
   }
 
   const buttonClickHandler = () => {
-    const newChat = {
-      message: message,
-      time: new Date().toLocaleString(),
-      name: userDetail.name,
-    }
-    setChats([...chats, newChat])
     setMessage('')
     insertChat()
   }
