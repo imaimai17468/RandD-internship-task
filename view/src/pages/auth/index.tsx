@@ -10,6 +10,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
+import { useAuthContext } from '@hooks/AuthContext'
 
 export default function Home() {
   const [name, setName] = React.useState('')
@@ -17,11 +18,19 @@ export default function Home() {
   const [password, setPassword] = React.useState('')
   const [retryPassword, setRetryPassword] = React.useState('')
   const [isShowCaution, setIsShowCaution] = React.useState(false)
-  const [user, setUser] = useRecoilState(userState)
+  const [userDetail, setUserDtail] = useRecoilState(userState)
   const [isSignUp, setIsSignUp] = React.useState(true)
   const [nowSubmit, setNowSubmit] = React.useState(false)
+  const { user } = useAuthContext()
+  const isLogin = !!user
+  const [isAlreadyLogin, setIsAlreadyLogin] = React.useState(false)
 
   const onSubmit = () => {
+    if(isLogin) {
+      setIsAlreadyLogin(true)
+      return
+    }
+
     if (password !== retryPassword) {
       setIsShowCaution(true)
       return
@@ -36,7 +45,7 @@ export default function Home() {
     }
     setIsShowCaution(false)
     createUserWithEmailAndPassword(auth, email, password)
-    setUser({
+    setUserDtail({
       name: name,
       email: email,
       password: password,
@@ -52,6 +61,11 @@ export default function Home() {
   }
 
   const onLogin = () => {
+    if(isLogin) {
+      setIsAlreadyLogin(true)
+      return
+    }
+
     if (email == '' || password == '') {
       setIsShowCaution(true)
       return
@@ -65,7 +79,7 @@ export default function Home() {
           if (doc.data().password == password) {
             setIsShowCaution(false)
             signInWithEmailAndPassword(auth, email, password)
-            setUser({
+            setUserDtail({
               name: doc.data().name,
               email: doc.data().email,
               password: doc.data().password,
@@ -118,6 +132,9 @@ export default function Home() {
       {isShowCaution && (
         <p className="text-red-500">入力内容に誤りがあります</p>
       )}
+      {isAlreadyLogin && (
+        <p className="text-red-500">すでにログインしています</p>
+      )}
     </div>
   )
 
@@ -152,6 +169,9 @@ export default function Home() {
       </div>
       {isShowCaution && (
         <p className="text-red-500">入力内容に誤りがあります</p>
+      )}
+      {isAlreadyLogin && (
+        <p className="text-red-500">すでにログインしています</p>
       )}
     </div>
   )
