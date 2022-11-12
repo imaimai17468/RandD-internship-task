@@ -31,10 +31,6 @@ const Index: NextPage = () => {
       : 'メッセージを入力してください'
 
   useEffect(() => {
-    if (!isLogin) {
-      Router.push('/auth')
-    }
-
     const unSub = db
       .collection('chats')
       .orderBy('time', 'asc')
@@ -54,6 +50,11 @@ const Index: NextPage = () => {
   }, [])
 
   const insertChat = async () => {
+    if (!isLogin) {
+      setIsShowLoginModal(true)
+      return
+    }
+    
     if (message === '') {
       return
     }
@@ -110,6 +111,7 @@ const Index: NextPage = () => {
 
   return (
     <div>
+      {!isLogin && isShowLoginModal && backToAuthPage}
       <div>
         <Header />
       </div>
