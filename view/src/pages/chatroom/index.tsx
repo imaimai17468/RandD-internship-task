@@ -147,8 +147,8 @@ const Index: NextPage = () => {
           </div>
           <div className="h-2/5 w-9/10">
             <div className="inline-flex w-full items-center justify-center">
-              <hr className="my-5 h-1 w-full rounded border-0 bg-background-1 dark:bg-gray-700" />
-              <div className="absolute left-1/2 -translate-x-1/2 bg-primary-2 px-4 text-3xl dark:bg-gray-900">
+              <hr className="my-5 h-1 w-full rounded border-0 bg-background-1" />
+              <div className="absolute left-1/2 -translate-x-1/2 bg-primary-2 px-4 text-3xl">
                 🐸
               </div>
             </div>
