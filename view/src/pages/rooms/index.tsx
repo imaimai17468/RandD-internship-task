@@ -63,6 +63,7 @@ const Index: NextPage = () => {
     if (title === '' || description === '') {
       setIsShowCaution(true)
     } else {
+      setIsCreateRoom(true)
       const roomRef = db.collection('rooms').doc()
       await roomRef.set({
         title: title,
@@ -71,7 +72,7 @@ const Index: NextPage = () => {
       })
       setIsOpen(false)
       setIsShowCaution(false)
-      setIsCreateRoom(true)
+      setIsCreateRoom(false)
     }
   }
 
