@@ -26,6 +26,7 @@ const Index: NextPage = () => {
   const { user } = useAuthContext()
   const isLogin = !!user
   const [isShowLoginModal, setIsShowLoginModal] = React.useState<boolean>(false)
+  const [isCreateRoom, setIsCreateRoom] = React.useState<boolean>(false)
 
   useEffect(() => {
     setRoom({ room_id: '', title: '', description: '' })
@@ -42,7 +43,7 @@ const Index: NextPage = () => {
               ({
                 title: doc.data().title,
                 description: doc.data().description,
-                created_at: doc.data().created_at,
+                created_at: new Date(doc.data().created_at).toLocaleString(),
               } as RoomProp),
           ),
         )
@@ -66,15 +67,11 @@ const Index: NextPage = () => {
       await roomRef.set({
         title: title,
         description: description,
-        created_at: new Date().toLocaleString(),
-      })
-      setRoom({
-        title: title,
-        description: description,
-        created_at: new Date().toLocaleDateString(),
+        created_at: new Date().getTime(),
       })
       setIsOpen(false)
       setIsShowCaution(false)
+      setIsCreateRoom(true)
     }
   }
 
@@ -116,13 +113,17 @@ const Index: NextPage = () => {
           />
         </div>
         <div className="ml-auto">
-          <Button
-            onClick={async () => {
-              await handleCreateRoom()
-            }}
-          >
-            作成
-          </Button>
+          {isCreateRoom ? (
+            <Button>作成中</Button>
+          ) : (
+            <Button
+              onClick={async () => {
+                await handleCreateRoom()
+              }}
+            >
+              作成
+            </Button>
+          )}
         </div>
         <div>
           {isShowCaution && (
@@ -141,7 +142,7 @@ const Index: NextPage = () => {
         <Header />
       </div>
       <main>
-        <div className="mx-auto flex w-4/5 flex-row items-center justify-between mt-8">
+        <div className="mx-auto mt-8 flex w-4/5 flex-row items-center justify-between">
           <p className="text-4xl">ルーム一覧</p>
           <Button outlined={true} onClick={handleOpen}>
             ルーム作成
