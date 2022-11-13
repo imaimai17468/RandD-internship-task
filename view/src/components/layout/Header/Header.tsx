@@ -24,8 +24,12 @@ export default function Header(): JSX.Element {
   }
 
   const isNotLoginHeader = (
-    <div className='ml-auto flex w-1/2 flex-row items-center justify-center md:w-1/3 text-sm'>
-      <Button onClick={() => {Router.push('/auth')}}>
+    <div className="ml-auto flex w-1/2 flex-row items-center justify-center text-sm md:w-1/3">
+      <Button
+        onClick={() => {
+          Router.push('/auth')
+        }}
+      >
         ログイン / 新規登録
       </Button>
     </div>
@@ -36,12 +40,22 @@ export default function Header(): JSX.Element {
   }
 
   const menu = (
-    <div className="z-50 absolute top-16 right-5 flex h-30v md:w-1/3 w-1/2 flex-col items-center justify-center gap-3 rounded-lg bg-white shadow-lg md:w-1/6">
-      <button onClick={() => {Router.push('/mypage')}} className="h-1/4 w-3/5 rounded-lg hover:shadow-lg">
-        <p className="mt-2 lg:text-lg text-base text-black">マイページ</p>
+    <div className="absolute top-16 right-5 z-50 flex h-30v w-1/2 flex-col items-center justify-center gap-3 rounded-lg bg-white shadow-lg md:w-1/3 md:w-1/6">
+      <button
+        onClick={() => {
+          Router.push('/mypage')
+        }}
+        className="h-1/4 w-3/5 rounded-lg hover:shadow-lg"
+      >
+        <p className="mt-2 text-base text-black lg:text-lg">マイページ</p>
       </button>
-      <button onClick={() => {Router.push('/rooms')}} className="h-1/4 w-3/5 rounded-lg hover:shadow-lg mb-3">
-        <p className="mt-2 lg:text-lg text-base text-black">ルーム一覧</p>
+      <button
+        onClick={() => {
+          Router.push('/rooms')
+        }}
+        className="mb-3 h-1/4 w-3/5 rounded-lg hover:shadow-lg"
+      >
+        <p className="mt-2 text-base text-black lg:text-lg">ルーム一覧</p>
       </button>
       <Button onClick={handleSignOut}>ログアウト</Button>
     </div>
