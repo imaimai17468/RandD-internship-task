@@ -20,8 +20,6 @@ const Index: NextPage = () => {
   const [description, setDescription] = React.useState<string>('')
   const [room, setRoom] = useRecoilState(roomState)
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
-  const [isOpenDeleteModal, setIsOpenDeleteModal] =
-    React.useState<boolean>(false)
   const [isShowCaution, setIsShowCaution] = React.useState<boolean>(false)
   const { user } = useAuthContext()
   const isLogin = !!user

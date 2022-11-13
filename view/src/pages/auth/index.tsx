@@ -26,15 +26,17 @@ export default function Home() {
   const [nowSubmit, setNowSubmit] = React.useState(false)
   const { user } = useAuthContext()
   const isLogin = !!user
-  const [isAlreadyLogin, setIsAlreadyLogin] = React.useState(false)
+  const [cautionContent, setCautionContent] = React.useState('')
 
   const onSubmit = () => {
     if (isLogin) {
-      setIsAlreadyLogin(true)
+      setCautionContent('すでにログインしています')
+      setIsShowCaution(true)
       return
     }
 
     if (password !== retryPassword) {
+      setCautionContent('パスワードが一致しません')
       setIsShowCaution(true)
       return
     } else if (
@@ -43,24 +45,49 @@ export default function Home() {
       password == '' ||
       retryPassword == ''
     ) {
+      setCautionContent('入力されていない項目があります')
       setIsShowCaution(true)
       return
     }
-    setIsShowCaution(false)
-    createUserWithEmailAndPassword(auth, email, password)
-    setUserDtail({
-      name: name,
-      email: email,
-      password: password,
-    })
-    const userRef = db.collection('users')
-    userRef.add({
-      name: name,
-      email: email,
-      password: password,
-    })
-    Router.push('/rooms')
-    setNowSubmit(true)
+
+    // すでに登録されてる名前かメールアドレスかを確認
+    db.collection('users')
+      .where('email', '==', email)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.size > 0) {
+          setCautionContent('すでに登録されているメールアドレスです')
+          setIsShowCaution(true)
+          return
+        } else {
+          setIsShowCaution(false)
+          createUserWithEmailAndPassword(auth, email, password)
+          // firestoreにユーザー情報を保存
+          // idは自動生成される
+          db.collection('users').add({
+            name: name,
+            email: email,
+            password: password,
+          })
+          // recoilのuserStateを更新
+          // firestoreから取得したidをuserStateに保存
+          db.collection('users')
+            .where('email', '==', email)
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                setUserDtail({
+                  id: doc.id,
+                  name: name,
+                  email: email,
+                  password: password,
+                })
+              })
+            })
+          Router.push('/rooms')
+          setNowSubmit(true)
+        }
+      })
   }
 
   async function signInWithGoogle() {
@@ -80,22 +107,34 @@ export default function Home() {
       })
     }
 
-    setUserDtail({
-      name: user.displayName,
-      email: user.email,
-      password: '',
-    })
+    // recoilのuserStateを更新
+    // firestoreから取得したidをuserStateに保存
+    db.collection('users')
+      .where('email', '==', user.email)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setUserDtail({
+            id: doc.id,
+            name: user.displayName,
+            email: user.email,
+            password: '',
+          })
+        })
+      })
 
     Router.push('/rooms')
   }
 
   const onLogin = () => {
     if (isLogin) {
-      setIsAlreadyLogin(true)
+      setCautionContent('すでにログインしています')
+      setIsShowCaution(true)
       return
     }
 
     if (email == '' || password == '') {
+      setCautionContent('入力されていない項目があります')
       setIsShowCaution(true)
       return
     }
@@ -109,6 +148,7 @@ export default function Home() {
             setIsShowCaution(false)
             signInWithEmailAndPassword(auth, email, password)
             setUserDtail({
+              id: doc.id,
               name: doc.data().name,
               email: doc.data().email,
               password: doc.data().password,
@@ -116,6 +156,7 @@ export default function Home() {
             setNowSubmit(true)
             Router.push('/rooms')
           } else {
+            setCautionContent('パスワードが間違っています')
             setIsShowCaution(true)
             return
           }
@@ -159,12 +200,7 @@ export default function Home() {
           <Button>登録中</Button>
         )}
       </div>
-      {isShowCaution && (
-        <p className="mt-3 text-red-500">入力内容に誤りがあります</p>
-      )}
-      {isAlreadyLogin && (
-        <p className="mt-3 text-red-500">すでにログインしています</p>
-      )}
+      {isShowCaution && <p className="mt-3 text-red-500">{cautionContent}</p>}
       <div className="my-5 flex w-4/5 flex-col items-center gap-4">
         <div className="flex w-full items-center">
           <div className="mr-3 flex-grow border-t border-primary-1"></div>
@@ -208,12 +244,7 @@ export default function Home() {
           <Button>ログイン中</Button>
         )}
       </div>
-      {isShowCaution && (
-        <p className="mt-3 text-red-500">入力内容に誤りがあります</p>
-      )}
-      {isAlreadyLogin && (
-        <p className="mt-3 text-red-500">すでにログインしています</p>
-      )}
+      {isShowCaution && <p className="mt-3 text-red-500">{cautionContent}</p>}
       <div className="my-5 flex w-4/5 flex-col items-center gap-4">
         <div className="flex w-full items-center">
           <div className="mr-3 flex-grow border-t border-primary-1"></div>
