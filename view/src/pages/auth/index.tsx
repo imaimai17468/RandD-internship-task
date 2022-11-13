@@ -124,8 +124,8 @@ export default function Home() {
   }
 
   const SingUp = (
-    <div className="flex w-4/5 flex-col items-center rounded-xl bg-white p-5 md:w-3/5">
-      <div className="ml-auto">
+    <div className="flex w-full flex-col items-center rounded-xl bg-white p-5 md:w-4/5 md:w-3/5">
+      <div className="ml-auto mb-5">
         <Button
           onClick={() => {
             setIsSignUp(false)
@@ -179,8 +179,8 @@ export default function Home() {
   )
 
   const SingIn = (
-    <div className="flex w-4/5 flex-col items-center rounded-xl bg-white p-5 md:w-3/5">
-      <div className="ml-auto">
+    <div className="flex w-full flex-col items-center rounded-xl bg-white p-5 md:w-4/5 md:w-3/5">
+      <div className="ml-auto mb-5">
         <Button
           onClick={() => {
             setIsSignUp(true)
