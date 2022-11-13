@@ -9,7 +9,7 @@ interface Props {
 
 export default function Button(props: Props): JSX.Element {
   const className =
-    'rounded text-xs md:text-lg' +
+    'rounded text-sm lg:text-lg' +
     (props.outlined
       ? ' border border-accent-1 text-accent-1 hover:bg-accent-1 hover:text-text-main-white font-bold'
       : ' border-none bg-accent-1 text-text-main-white hover:bg-accent-2') +
