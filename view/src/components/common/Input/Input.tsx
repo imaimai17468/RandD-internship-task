@@ -7,6 +7,7 @@ interface Props {
   required?: boolean
   minLength?: number
   disabled?: boolean
+  value?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   onSubmit?: (e: React.FormEvent<HTMLInputElement>) => void
 }
@@ -20,6 +21,7 @@ export default function Input(props: Props): JSX.Element {
   return (
     <input
       type={type}
+      value={props.value}
       className={style}
       placeholder={props.placeholder}
       required={props.required}
