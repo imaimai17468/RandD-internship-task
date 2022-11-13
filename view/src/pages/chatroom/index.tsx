@@ -54,11 +54,11 @@ const Index: NextPage = () => {
       setIsShowLoginModal(true)
       return
     }
-    
+
     if (message === '') {
       return
     }
-    
+
     const chat = {
       message: message,
       time: new Date().getTime(),

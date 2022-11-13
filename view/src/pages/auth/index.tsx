@@ -9,8 +9,11 @@ import { auth, db } from '../../firebase'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth'
 import { useAuthContext } from '@hooks/AuthContext'
+import GoogleButton from 'react-google-button'
 
 export default function Home() {
   const [name, setName] = React.useState('')
@@ -26,7 +29,7 @@ export default function Home() {
   const [isAlreadyLogin, setIsAlreadyLogin] = React.useState(false)
 
   const onSubmit = () => {
-    if(isLogin) {
+    if (isLogin) {
       setIsAlreadyLogin(true)
       return
     }
@@ -60,8 +63,34 @@ export default function Home() {
     setNowSubmit(true)
   }
 
+  async function signInWithGoogle() {
+    const provider = new GoogleAuthProvider()
+    const result = await signInWithPopup(auth, provider)
+    const user = result.user
+
+    // dbにユーザー情報を保存
+    // すでに登録済みの場合は保存しない
+    const userRef = db.collection('users')
+    const snapshot = await userRef.where('email', '==', user.email).get()
+    if (snapshot.empty) {
+      userRef.add({
+        name: user.displayName,
+        email: user.email,
+        password: '',
+      })
+    }
+
+    setUserDtail({
+      name: user.displayName,
+      email: user.email,
+      password: '',
+    })
+
+    Router.push('/rooms')
+  }
+
   const onLogin = () => {
-    if(isLogin) {
+    if (isLogin) {
       setIsAlreadyLogin(true)
       return
     }
@@ -95,15 +124,16 @@ export default function Home() {
   }
 
   const SingUp = (
-    <div className="flex w-4/5 flex-col items-center rounded-xl bg-white p-5 md:w-3/5">
-      <div className="ml-auto">
+    <div className="flex w-full flex-col items-center rounded-xl bg-white p-5 md:w-4/5 md:w-3/5">
+      <div className="ml-auto mb-5">
         <Button
           onClick={() => {
             setIsSignUp(false)
             setIsShowCaution(false)
           }}
+          outlined={true}
         >
-          ログイン
+          ログインへ
         </Button>
       </div>
       <p className="mb-5 text-3xl">新規登録</p>
@@ -130,24 +160,35 @@ export default function Home() {
         )}
       </div>
       {isShowCaution && (
-        <p className="text-red-500">入力内容に誤りがあります</p>
+        <p className="mt-3 text-red-500">入力内容に誤りがあります</p>
       )}
       {isAlreadyLogin && (
-        <p className="text-red-500">すでにログインしています</p>
+        <p className="mt-3 text-red-500">すでにログインしています</p>
       )}
+      <div className="my-5 flex w-4/5 flex-col items-center gap-4">
+        <div className="flex w-full items-center">
+          <div className="mr-3 flex-grow border-t border-primary-1"></div>
+          <p className="text-gray-500">または</p>
+          <div className="ml-3 flex-grow border-t border-primary-1"></div>
+        </div>
+        <div>
+          <GoogleButton onClick={signInWithGoogle} />
+        </div>
+      </div>
     </div>
   )
 
   const SingIn = (
-    <div className="flex w-4/5 flex-col items-center rounded-xl bg-white p-5 md:w-3/5">
-      <div className="ml-auto">
+    <div className="flex w-full flex-col items-center rounded-xl bg-white p-5 md:w-4/5 md:w-3/5">
+      <div className="ml-auto mb-5">
         <Button
           onClick={() => {
             setIsSignUp(true)
             setIsShowCaution(false)
           }}
+          outlined={true}
         >
-          新規登録
+          新規登録へ
         </Button>
       </div>
       <p className="mb-5 text-3xl">ログイン</p>
@@ -168,11 +209,21 @@ export default function Home() {
         )}
       </div>
       {isShowCaution && (
-        <p className="text-red-500">入力内容に誤りがあります</p>
+        <p className="mt-3 text-red-500">入力内容に誤りがあります</p>
       )}
       {isAlreadyLogin && (
-        <p className="text-red-500">すでにログインしています</p>
+        <p className="mt-3 text-red-500">すでにログインしています</p>
       )}
+      <div className="my-5 flex w-4/5 flex-col items-center gap-4">
+        <div className="flex w-full items-center">
+          <div className="mr-3 flex-grow border-t border-primary-1"></div>
+          <p className="text-gray-500">または</p>
+          <div className="ml-3 flex-grow border-t border-primary-1"></div>
+        </div>
+        <div>
+          <GoogleButton onClick={signInWithGoogle} />
+        </div>
+      </div>
     </div>
   )
 
