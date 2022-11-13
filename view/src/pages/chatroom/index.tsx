@@ -62,6 +62,7 @@ const Index: NextPage = () => {
     const chat = {
       message: message,
       time: new Date().getTime(),
+      email: userDetail.email,
       name: userDetail.name,
       room_id: room.room_id,
     }
