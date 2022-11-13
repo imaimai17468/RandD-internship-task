@@ -24,11 +24,13 @@ export default function Header(): JSX.Element {
   }
 
   const isNotLoginHeader = (
-    <Link href="/auth">
-      <p className="text-sm text-text-main-white lg:text-xl">
-        ログイン / 新規登録
-      </p>
-    </Link>
+    <div className='ml-auto flex w-1/2 flex-row items-center justify-center md:w-1/5'>
+      <Link href="/auth">
+        <p className="text-sm text-text-main-white lg:text-xl">
+          ログイン / 新規登録
+        </p>
+      </Link>
+    </div>
   )
 
   const openMenuHandler = () => {
