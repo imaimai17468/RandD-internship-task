@@ -39,7 +39,7 @@ export default function Header(): JSX.Element {
     <div className="absolute top-16 right-5 flex h-20v w-1/3 flex-col items-center justify-center gap-5 rounded-lg bg-white shadow-lg md:w-1/6">
       {/* ホバーすると影がつく背景が白色のボタン */}
       <button className="h-1/3 w-3/5 rounded-lg hover:shadow-lg">
-        <p className="mt-2 text-lg text-black">マイページ</p>
+        <p className="mt-2 lg:text-lg text-base text-black">マイページ</p>
       </button>
       <Button onClick={handleSignOut}>ログアウト</Button>
     </div>
