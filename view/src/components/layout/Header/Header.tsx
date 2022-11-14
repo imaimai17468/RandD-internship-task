@@ -40,7 +40,7 @@ export default function Header(): JSX.Element {
   }
 
   const menu = (
-    <div className="absolute top-16 right-5 z-50 flex h-30v w-1/2 flex-col items-center justify-center gap-3 rounded-lg bg-white shadow-lg md:w-1/3 md:w-1/6">
+    <div className="absolute top-16 right-5 z-50 flex h-40v w-1/2 flex-col items-center justify-center gap-3 py-5 rounded-lg bg-white shadow-lg md:w-1/5">
       <button
         onClick={() => {
           Router.push('/mypage')
@@ -48,6 +48,14 @@ export default function Header(): JSX.Element {
         className="h-1/4 w-3/5 rounded-lg hover:shadow-lg"
       >
         <p className="mt-2 text-base text-black lg:text-lg">マイページ</p>
+      </button>
+      <button
+        onClick={() => {
+          Router.push('/password')
+        }}
+        className="h-1/4 w-3/5 rounded-lg hover:shadow-lg"
+      >
+        <p className="mt-2 text-base text-black lg:text-lg">パスワード変更</p>
       </button>
       <button
         onClick={() => {
@@ -62,7 +70,7 @@ export default function Header(): JSX.Element {
   )
 
   const isLoginHeader = (
-    <div className="ml-auto flex w-1/2 flex-row items-center justify-center md:w-1/5">
+    <div className="ml-auto flex w-2/3 flex-row items-center justify-center md:w-1/5">
       <button
         onClick={openMenuHandler}
         className="group flex h-full w-full flex-row items-center justify-center gap-3 rounded-lg hover:bg-primary-2"
