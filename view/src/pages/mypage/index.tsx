@@ -2,12 +2,13 @@ import React, { useEffect } from 'react'
 import { Room, Button, Modal, Input } from '@components/common'
 import { Header } from '@components/layout'
 import { NextPage } from 'next'
-import { db } from '../../firebase'
+import { db, auth } from '../../firebase'
 import { roomState } from '@components/store/Room/room'
 import { userState } from '@components/store/Auth/auth'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { useAuthContext } from '@hooks/AuthContext'
 import Router from 'next/router'
+import { updateProfile, updateEmail, updatePassword } from 'firebase/auth'
 
 interface RoomProp {
   title: string
@@ -55,16 +56,11 @@ const Index: NextPage = () => {
 
   // ボタンが押されたらユーザー情報を更新
   const userChangeHanlder = () => {
-    db.collection('users')
-      .where('email', '==', email)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          db.collection('users').doc(doc.id).update({
-            name: name,
-          })
-        })
-      })
+    db.collection('users').doc(userDetail.id).update({
+      name: name,
+      email: email,
+      password: password,
+    })
 
     // 元の名前のチャットを更新
     db.collection('chats')
@@ -82,6 +78,13 @@ const Index: NextPage = () => {
       ...userDetail,
       name: name,
     })
+
+    if (auth.currentUser) {
+      updateProfile(auth.currentUser, {
+        displayName: name,
+      })
+    }
+
     setChangeContent(`ユーザー名を${name}に変更しました`)
     setIsSave(true)
   }
