@@ -29,7 +29,7 @@
     "react-dom": "18.2.0",
     "react-google-button": "^0.7.2",
     "recoil-persist": "^4.2.0",
-    "typescript": "4.8.4"
+    "typescript": "5.3.3"
   },
   "devDependencies": {
     "@aspida/axios": "^1.11.0",
